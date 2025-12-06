@@ -1,24 +1,20 @@
-const {
-  getPatient,
-  getConditions,
-  addCondition,
-  updateCondition,
-  getAllPatients,
-} = require("../controllers/patientController");
+const patientController = require("../controllers/patientController");
 
 const router = require("express").Router();
 
 //to get a list of all the patients in db
-router.get("/patient", getAllPatients);
+router.get("/patient", patientController.getAllPatients);
 
 //get a specific patient
-router.get("/patient/:id", getPatient);
+router.get("/patient/:id", patientController.getPatient);
 
 //get all conditions of a specific patient
-router.get("patient/:id/conditions", getConditions);
+router.get("/patient/:id/conditions", patientController.getConditions);
 
 //post a new patient condition
-router.post("patient/:id/conditions", addCondition);
+router.post("/patient/:id/conditions", patientController.addCondition);
 
 //update an existing condition
-router.put("patient/:id/conditions/:id", updateCondition);
+router.put("/patient/:id/conditions/:id", patientController.updateCondition);
+
+module.exports = router;
