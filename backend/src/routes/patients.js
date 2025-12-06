@@ -1,5 +1,13 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-router.get("/patient/:id")
-router.put("/patietn/:id/condition")
-router.get("patient/:id/conditions")
+//get a specific patient
+router.get("/patient/:id");
+
+//get all conditions of a specific patient
+router.get("patient/:id/conditions");
+
+//post a new patient condition
+router.post("patient/:id/conditions");
+
+//update an existing condition
+router.put("patient/:id/conditions/:id");

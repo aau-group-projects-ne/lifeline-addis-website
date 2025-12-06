@@ -1,6 +1,6 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-router.get("/staff/:id")
+router.get("/staff/:id");
 
-//only admin can do this
-router.post("/staff")
+//only admin can create a new staff
+router.post("/staff");
