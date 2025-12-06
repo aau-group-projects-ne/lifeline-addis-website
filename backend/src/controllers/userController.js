@@ -1,5 +1,5 @@
 //fetches a specific user's full data
-exports.getUsers = (req, res) => {};
+exports.getUser = (req, res) => {};
 
 //for admin to create a new account
 exports.createUser = (req, res) => {};
