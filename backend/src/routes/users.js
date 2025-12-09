@@ -2,7 +2,7 @@ const userController = require("../controllers/userController");
 
 const router = require("express").Router();
 
-router.get("/users/:id", userController.getUser);
+router.get("/users", userController.getUser);
 
 //to add new users... only for admins
 router.post("/users", userController.createUser);
