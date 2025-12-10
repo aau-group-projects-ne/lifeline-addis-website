@@ -1,5 +1,10 @@
 USE lifeline_addis;
 
+drop Table staff;
+show tables;
+
+
+
 CREATE TABLE User (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id VARCHAR(10) unique,
@@ -21,7 +26,7 @@ CREATE TABLE Patient (
 
 CREATE TABLE Staff (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  username varchar(10) unique,
+  user_id varchar(10) unique,
   profession VARCHAR(20),
   salary DECIMAL(10,2),
   FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE 
