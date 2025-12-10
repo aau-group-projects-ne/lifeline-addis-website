@@ -8,6 +8,8 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/patient
 ### 
+GET http://localhost:3000/patient/user1
+###
 POST http://localhost:3000/users
 Content-Type: application/json
 
