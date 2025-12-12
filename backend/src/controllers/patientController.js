@@ -9,7 +9,18 @@ exports.getAllPatients = async (req, res) => {
     console.error("Can't fetch the patients");
   }
 };
-exports.getPatient = (req, res) => {};
+exports.getPatient = async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const [rows] = await pool.query("SELECT * FROM Patient where user_id = ?", [
+      user_id,
+    ]);
+    res.send(rows[0]);
+  } catch (err) {
+    console.error("There seems to be an error fetching patient", err);
+    res.send(("There seems to be an error fetching patient", err));
+  }
+};
 
 exports.getConditions = (req, res) => {};
 

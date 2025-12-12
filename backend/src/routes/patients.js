@@ -6,7 +6,7 @@ const router = require("express").Router();
 router.get("/patient", patientController.getAllPatients);
 
 //get a specific patient
-router.get("/patient/:id", patientController.getPatient);
+router.get("/patient/:user_id", patientController.getPatient);
 
 //get all conditions of a specific patient
 router.get("/patient/:id/conditions", patientController.getConditions);
