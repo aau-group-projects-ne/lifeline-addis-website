@@ -1,5 +1,6 @@
 const pool = require("../models/db");
 
+//pull all the different patients
 exports.getAllPatients = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Patient");
@@ -9,6 +10,8 @@ exports.getAllPatients = async (req, res) => {
     console.error("Can't fetch the patients");
   }
 };
+
+//gets a specific patient
 exports.getPatient = async (req, res) => {
   const { user_id } = req.params;
   try {

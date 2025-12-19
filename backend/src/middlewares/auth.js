@@ -1,1 +1,1 @@
-exports.requireAuth = (req, res, next) => { }
+exports.requireAuth = (req, res, next) => {};

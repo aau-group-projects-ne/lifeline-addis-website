@@ -3,6 +3,9 @@ exports.login = (req, res) => {
   res.send(`Welcome ${username} `);
 };
 
-exports.register = (req, res) => {};
+exports.register = (req, res) => {
+  
+  
+};
 
 exports.logout = (req, res) => {};
