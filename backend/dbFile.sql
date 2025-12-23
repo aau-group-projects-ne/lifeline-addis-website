@@ -1,36 +1,73 @@
 USE lifeline_addis;
 
-drop Table staff;
+drop Table user;
 show tables;
 
 
 
-CREATE TABLE User (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id VARCHAR(10) unique,
-  name VARCHAR(100),
-  age INT,
-  email VARCHAR(100) UNIQUE,
-  address VARCHAR(255),
-  password VARCHAR(255),
-  role ENUM('admin','staff','patient')
+CREATE TABLE Person (	
+	fname varchar(20), 
+    lname varchar(20), 
+    userId varchar(10) primary key unique,
+    email varchar(20) unique,
+    phone varchar(20),
+    address varchar(20),
+    role enum("patient", "doctor", "nurse", "admin"),
+    password varchar(20),  
 );
 
 CREATE TABLE Patient (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name varchar(100),
-  user_id varchar(10) unique,
-  currentCondition VARCHAR(255),
-  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+  userId varchar(10) unique,
+  height float,
+  weight float,
+  DateOfBirth date,
+  MedicalTistory longtext,
+  bloodType enum("A+","A-","B+","B-","O+","O-","AB+","AB-"),
+  age int,
+  FOREIGN KEY (userId) REFERENCES Person(userId) ON DELETE CASCADE
 );
 
-CREATE TABLE Staff (
+CREATE TABLE Doctor (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id varchar(10) unique,
-  profession VARCHAR(20),
+  userId varchar(10) unique,
+  specialization VARCHAR(20),
   salary DECIMAL(10,2),
-  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE 
+  activeHours time,
+  FOREIGN KEY (userId) REFERENCES Person(userId) ON DELETE CASCADE 
 );
+
+CREATE TABLE Nurse (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId varchar(10) unique,
+  specialization VARCHAR(20),
+  salary DECIMAL(10,2),
+  activeHours time,
+  FOREIGN KEY (userId) REFERENCES Person(userId) ON DELETE CASCADE 
+);
+
+CREATE TABLE medicalRecords(
+	id int primary key,
+    createAt datetime,
+    details longtext,
+    doctorId varchar(20),
+    patientId varchar(20),
+    FOREIGN KEY (patientId) REFERENCES Patient(userId) ON DELETE CASCADE,
+    FOREIGN KEY (doctorId) REFERENCES Doctor(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE Assigns(
+	doctorId varchar(20),
+	patientId varchar(20),
+	id int primary key,
+	nurseId varchar(20),
+	FOREIGN KEY (doctorId) REFERENCES Doctor(userId) ON DELETE CASCADE,
+	FOREIGN KEY (nurseId) REFERENCES Nurse(userId) ON DELETE CASCADE,
+	FOREIGN KEY (patientId) REFERENCES Patient(userId) ON DELETE CASCADE
+);
+
+
+
 
 
 
