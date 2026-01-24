@@ -1,65 +1,317 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
-export default function Home() {
+export default function HomePage() {
+  // Auth
+  const [regForm, setRegForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "patient",
+  });
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Doctor
+  const [docPatientId, setDocPatientId] = useState("");
+  const [docDocument, setDocDocument] = useState("");
+  const [docPrice, setDocPrice] = useState("");
+
+  // Nurse
+  const [nurseAssessmentId, setNurseAssessmentId] = useState("");
+  const [nurseStatus, setNurseStatus] = useState("");
+
+  // Rating
+  const [ratingPatientId, setRatingPatientId] = useState("");
+  const [ratingUserId, setRatingUserId] = useState("");
+  const [ratingScore, setRatingScore] = useState(5);
+  const [ratingComment, setRatingComment] = useState("");
+
+  // Payment Slip
+  const [payPatientId, setPayPatientId] = useState("");
+  const [payAssessmentId, setPayAssessmentId] = useState("");
+  const [payFile, setPayFile] = useState<File | null>(null);
+
+  // Helper: fetch with token
+  async function api(path: string, options: RequestInit = {}) {
+    const token = localStorage.getItem("token");
+    const headers: HeadersInit = {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+    const res = await fetch(`/api${path}`, { ...options, headers });
+    return res.json();
+  }
+
+  // Handlers
+  async function handleRegister() {
+    await api("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(regForm),
+    });
+    alert("Registered!");
+  }
+
+  async function handleLogin() {
+    const res = await api("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+    });
+    localStorage.setItem("token", res.token);
+    alert("Logged in!");
+  }
+
+  async function createAssessment() {
+    await api("/assessments", {
+      method: "POST",
+      body: JSON.stringify({
+        patientId: Number(docPatientId),
+        doctorId: 1, // replace with logged-in doctor ID
+        document: docDocument,
+        estimatedPrice: Number(docPrice),
+      }),
+    });
+    alert("Assessment created!");
+  }
+
+  async function addUpdate() {
+    await api("/updates", {
+      method: "POST",
+      body: JSON.stringify({
+        assessmentId: Number(nurseAssessmentId),
+        nurseId: 2, // replace with logged-in nurse ID
+        statusUpdate: nurseStatus,
+      }),
+    });
+    alert("Update added!");
+  }
+
+  async function submitRating() {
+    await api("/ratings", {
+      method: "POST",
+      body: JSON.stringify({
+        patientId: Number(ratingPatientId),
+        ratedUserId: Number(ratingUserId),
+        score: Number(ratingScore),
+        comment: ratingComment,
+      }),
+    });
+    alert("Rating submitted!");
+  }
+
+  async function uploadSlip() {
+    if (!payFile) return alert("Select a file first!");
+    const formData = new FormData();
+    formData.append("slip", payFile);
+    formData.append("patientId", payPatientId);
+    formData.append("assessmentId", payAssessmentId);
+
+    await api("/payments/upload", { method: "POST", body: formData });
+    alert("Slip uploaded!");
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
+      <h1 className="text-3xl font-bold mb-8">🏥 Medical Home Care Demo</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+        {/* Register */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Register</h2>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Name"
+            value={regForm.name}
+            onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Email"
+            value={regForm.email}
+            onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            type="password"
+            placeholder="Password"
+            value={regForm.password}
+            onChange={(e) =>
+              setRegForm({ ...regForm, password: e.target.value })
+            }
+          />
+          <select
+            className="border p-2 w-full mb-2"
+            value={regForm.role}
+            onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="nurse">Nurse</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+            onClick={handleRegister}
+          >
+            Register
+          </button>
+        </section>
+
+        {/* Login */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Login</h2>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Email"
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            type="password"
+            placeholder="Password"
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
+          />
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+        </section>
+
+        {/* Doctor */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Doctor Assessment</h2>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Patient ID"
+            value={docPatientId}
+            onChange={(e) => setDocPatientId(e.target.value)}
+          />
+          <textarea
+            className="border p-2 w-full mb-2"
+            placeholder="Document"
+            value={docDocument}
+            onChange={(e) => setDocDocument(e.target.value)}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Estimated Price"
+            value={docPrice}
+            onChange={(e) => setDocPrice(e.target.value)}
+          />
+          <button
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-full"
+            onClick={createAssessment}
+          >
+            Create Assessment
+          </button>
+        </section>
+
+        {/* Nurse */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Nurse Update</h2>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Assessment ID"
+            value={nurseAssessmentId}
+            onChange={(e) => setNurseAssessmentId(e.target.value)}
+          />
+          <textarea
+            className="border p-2 w-full mb-2"
+            placeholder="Status Update"
+            value={nurseStatus}
+            onChange={(e) => setNurseStatus(e.target.value)}
+          />
+          <button
+            className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 w-full"
+            onClick={addUpdate}
+          >
+            Add Update
+          </button>
+        </section>
+
+        {/* Rating */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Patient Rating</h2>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Patient ID"
+            value={ratingPatientId}
+            onChange={(e) => setRatingPatientId(e.target.value)}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Rated User ID"
+            value={ratingUserId}
+            onChange={(e) => setRatingUserId(e.target.value)}
+          />
+          <input
+            className="border p-2 w-full mb-2"
+            type="number"
+            min="1"
+            max="5"
+            value={ratingScore}
+            onChange={(e) => setRatingScore(Number(e.target.value))}
+          />
+          <textarea
+            className="border p-2 w-full mb-2"
+            placeholder="Comment"
+            value={ratingComment}
+            onChange={(e) => setRatingComment(e.target.value)}
+          />
+          <button
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full"
+            onClick={submitRating}
+          >
+            Submit Rating
+          </button>
+        </section>
+
+        {/* Payment Slip */}
+        <section className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            💳 Upload Payment Slip
+          </h2>
+
+          <div className="space-y-3">
+            <input
+              className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
+              placeholder="Patient ID"
+              value={payPatientId}
+              onChange={(e) => setPayPatientId(e.target.value)}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+            <input
+              className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
+              placeholder="Assessment ID"
+              value={payAssessmentId}
+              onChange={(e) => setPayAssessmentId(e.target.value)}
+            />
+
+            <input
+              type="file"
+              className="block w-full text-sm text-gray-500 
+                 file:mr-4 file:py-2 file:px-4
+                 file:rounded-full file:border-0
+                 file:text-sm file:font-semibold
+                 file:bg-blue-50 file:text-blue-700
+                 hover:file:bg-blue-100"
+              onChange={(e) => setPayFile(e.target.files?.[0] || null)}
+            />
+
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded w-full 
+                 hover:bg-blue-700 transition-colors"
+              onClick={uploadSlip}
+            >
+              Upload Slip
+            </button>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
