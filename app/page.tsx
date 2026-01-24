@@ -40,6 +40,11 @@ export default function HomePage() {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
     const res = await fetch(`/api${path}`, { ...options, headers });
+    if (!res.ok) {
+      const text = await res.text(); // fallback if not JSON
+      throw new Error(`Request failed: ${res.status} ${text}`);
+    }
+
     return res.json();
   }
 
