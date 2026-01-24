@@ -1,0 +1,100 @@
+datasource db {
+  provider = "mysql"
+ 
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  patient
+  doctor
+  nurse
+  admin
+}
+
+model User {
+  id              Int        @id @default(autoincrement())
+  name            String
+  email           String     @unique
+  password        String
+  role            Role
+
+  // Relations
+  patient         Patient?
+  ratingsReceived Rating[]   // doctors/nurses can be rated
+  assessments     Assessment[] @relation("DoctorAssessments")
+  updates         Update[]     @relation("NurseUpdates")
+  assignments     Assignment[] @relation("NurseAssignments")
+}
+
+model Patient {
+  id            Int          @id @default(autoincrement())
+  userId        Int          @unique
+  user          User         @relation(fields: [userId], references: [id])
+
+  assessments   Assessment[]
+  payments      Payment[]
+  ratingsGiven  Rating[]     // patients give ratings
+  assignments   Assignment[]
+}
+
+model Assessment {
+  id            Int        @id @default(autoincrement())
+  patientId     Int
+  doctorId      Int
+  document      String
+  estimatedPrice Float
+  createdAt     DateTime   @default(now())
+
+  patient       Patient    @relation(fields: [patientId], references: [id])
+  doctor        User       @relation("DoctorAssessments", fields: [doctorId], references: [id])
+
+  updates       Update[]
+  payments      Payment[]
+}
+
+model Update {
+  id           Int        @id @default(autoincrement())
+  assessmentId Int
+  nurseId      Int
+  statusUpdate String
+  updatedAt    DateTime   @default(now())
+
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  nurse        User       @relation("NurseUpdates", fields: [nurseId], references: [id])
+}
+
+model Rating {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  ratedUserId Int
+  score       Int
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  ratedUser   User     @relation(fields: [ratedUserId], references: [id])
+}
+
+model Assignment {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  nurseId   Int
+  assignedAt DateTime @default(now())
+
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  nurse     User      @relation("NurseAssignments", fields: [nurseId], references: [id])
+}
+
+model Payment {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  assessmentId Int
+  slipUrl     String
+  uploadedAt  DateTime @default(now())
+
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  assessment  Assessment @relation(fields: [assessmentId], references: [id])
+}
