@@ -73,6 +73,8 @@ model rating {
   score       Int
   comment     String?
   createdAt   DateTime @default(now())
+  patient     patient  @relation(fields: [patientId], references: [id], map: "Rating_patientId_fkey")
+  user        user     @relation(fields: [ratedUserId], references: [id], map: "Rating_ratedUserId_fkey")
 
   patient   patient @relation(name: "PatientRatings", fields: [patientId], references: [id])
   ratedUser user    @relation(name: "RatingsGiven", fields: [ratedUserId], references: [id])
