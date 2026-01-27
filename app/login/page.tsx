@@ -25,7 +25,8 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      // Updated endpoint
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,11 +41,11 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Invalid email or password");
+        setError(data.error || "Invalid email or password");
         return;
       }
 
-      // Store token securely
+      // Store token securely (localStorage or cookie depending on your backend)
       localStorage.setItem("token", data.token);
 
       alert("Login successful!");
