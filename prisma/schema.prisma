@@ -37,13 +37,17 @@ model assignment {
 }
 
 model patient {
-  id         Int          @id @default(autoincrement())
-  userId     Int          @unique(map: "Patient_userId_key")
-  assessment assessment[]
-  assignment assignment[]
-  user       user         @relation(fields: [userId], references: [id], map: "Patient_userId_fkey")
-  payment    payment[]
-  rating     rating[]
+  id          Int          @id @default(autoincrement())
+  userId      Int          @unique(map: "Patient_userId_key")
+  age         Int?         // optional, can be required if you prefer
+  sex         String?      // could also be an enum for stricter values
+  phoneNumber String?      // optional, unique if you want one number per patient
+
+  assessment  assessment[]
+  assignment  assignment[]
+  user        user         @relation(fields: [userId], references: [id], map: "Patient_userId_fkey")
+  payment     payment[]
+  rating      rating[]
 }
 
 model payment {

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `patient` ADD COLUMN `age` INTEGER NULL,
+    ADD COLUMN `phoneNumber` VARCHAR(191) NULL,
+    ADD COLUMN `sex` VARCHAR(191) NULL;
