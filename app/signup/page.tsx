@@ -121,7 +121,7 @@ function Signup() {
           name: form.fullName,
           email: form.email,
           password: form.password,
-          role: form.userType === "patient" ? "patient" : "nurse",
+          role: form.userType.toLowerCase(), // ensures "Patient" → "patient"
         }),
       });
 
@@ -131,6 +131,15 @@ function Signup() {
         return;
       }
       alert("Registration successful!");
+      setForm({
+        userType: "patient",
+        fullName: "",
+        phone: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        agreeTerms: false,
+      });
     } catch {
       alert("Something went wrong. Please try again.");
     } finally {

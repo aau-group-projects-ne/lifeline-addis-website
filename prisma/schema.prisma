@@ -14,11 +14,10 @@ model assessment {
   document       String
   estimatedPrice Float
   createdAt      DateTime  @default(now())
-
-  doctor   user      @relation(name: "DoctorAssessments", fields: [doctorId], references: [id])
-  patient  patient   @relation(name: "PatientAssessments", fields: [patientId], references: [id])
-  payments payment[] @relation("AssessmentPayments")
-  updates  update[]  @relation("AssessmentUpdates")
+  doctor         user      @relation("DoctorAssessments", fields: [doctorId], references: [id])
+  patient        patient   @relation("PatientAssessments", fields: [patientId], references: [id])
+  payments       payment[] @relation("AssessmentPayments")
+  updates        update[]  @relation("AssessmentUpdates")
 
   @@index([doctorId])
   @@index([patientId])
@@ -29,9 +28,8 @@ model assignment {
   patientId  Int
   nurseId    Int
   assignedAt DateTime @default(now())
-
-  nurse   user     @relation(name: "NurseAssignments", fields: [nurseId], references: [id])
-  patient patient  @relation(name: "PatientAssignments", fields: [patientId], references: [id])
+  nurse      user     @relation("NurseAssignments", fields: [nurseId], references: [id])
+  patient    patient  @relation("PatientAssignments", fields: [patientId], references: [id])
 
   @@index([nurseId])
   @@index([patientId])
@@ -43,13 +41,11 @@ model patient {
   age         Int?
   sex         String?
   phoneNumber String?
-
   assessments assessment[] @relation("PatientAssessments")
   assignments assignment[] @relation("PatientAssignments")
+  user        user         @relation("UserPatient", fields: [userId], references: [id])
   payments    payment[]    @relation("PatientPayments")
   ratings     rating[]     @relation("PatientRatings")
-
-  user user @relation(name: "UserPatient", fields: [userId], references: [id])
 }
 
 model payment {
@@ -58,9 +54,8 @@ model payment {
   assessmentId Int
   slipUrl      String
   uploadedAt   DateTime   @default(now())
-
-  assessment assessment @relation(name: "AssessmentPayments", fields: [assessmentId], references: [id])
-  patient    patient    @relation(name: "PatientPayments", fields: [patientId], references: [id])
+  assessment   assessment @relation("AssessmentPayments", fields: [assessmentId], references: [id])
+  patient      patient    @relation("PatientPayments", fields: [patientId], references: [id])
 
   @@index([assessmentId])
   @@index([patientId])
@@ -73,9 +68,8 @@ model rating {
   score       Int
   comment     String?
   createdAt   DateTime @default(now())
-
-  patient   patient @relation(name: "PatientRatings", fields: [patientId], references: [id])
-  ratedUser user    @relation(name: "RatingsGiven", fields: [ratedUserId], references: [id])
+  patient     patient  @relation("PatientRatings", fields: [patientId], references: [id])
+  ratedUser   user     @relation("RatingsGiven", fields: [ratedUserId], references: [id])
 
   @@index([patientId])
   @@index([ratedUserId])
@@ -87,26 +81,24 @@ model update {
   nurseId      Int
   statusUpdate String
   updatedAt    DateTime   @default(now())
-
-  assessment assessment @relation(name: "AssessmentUpdates", fields: [assessmentId], references: [id])
-  nurse      user       @relation(name: "NurseUpdates", fields: [nurseId], references: [id])
+  assessment   assessment @relation("AssessmentUpdates", fields: [assessmentId], references: [id])
+  nurse        user       @relation("NurseUpdates", fields: [nurseId], references: [id])
 
   @@index([assessmentId])
   @@index([nurseId])
 }
 
 model user {
-  id       Int       @id @default(autoincrement())
-  name     String
-  email    String    @unique
-  password String
-  role     user_role
-
+  id                Int          @id @default(autoincrement())
+  name              String
+  email             String       @unique
+  password          String
+  role              user_role
   doctorAssessments assessment[] @relation("DoctorAssessments")
   nurseAssignments  assignment[] @relation("NurseAssignments")
-  nurseUpdates      update[]     @relation("NurseUpdates")
-  ratingsGiven      rating[]     @relation("RatingsGiven")
   patient           patient?     @relation("UserPatient")
+  ratingsGiven      rating[]     @relation("RatingsGiven")
+  nurseUpdates      update[]     @relation("NurseUpdates")
 }
 
 enum user_role {
