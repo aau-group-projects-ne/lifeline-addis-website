@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const patient = await prisma.patient.findUnique({
     where: { id: Number(params.id) },
-    include: { assessments: true, payments: true },
+    include: { assessment: true, payments: true },
   });
   return NextResponse.json(patient);
 }

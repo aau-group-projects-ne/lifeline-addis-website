@@ -1,11 +1,11 @@
-// middleware.ts
+// proxy.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const token = req.cookies.get("auth_token")?.value;
 
   if (!token) {
@@ -33,6 +33,7 @@ export async function middleware(req: NextRequest) {
   }
 }
 
+// Configure which routes the proxy applies to
 export const config = {
   matcher: ["/admin/:path*", "/caregiver/:path*", "/patient/:path*"],
 };
