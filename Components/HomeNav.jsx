@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 function HomeNav() {
   return (
@@ -23,7 +24,11 @@ function HomeNav() {
             ["Careers", "careers"],
             ["Contact", "contact"],
           ].map(([label, id]) => (
-            <a key={id} href={`#${id}`}>
+            <a
+              key={id}
+              href={`#${id}`}
+              className="text-sm font-medium hover:text-primary transition cursor-pointer"
+            >
               {label}
             </a>
           ))}
