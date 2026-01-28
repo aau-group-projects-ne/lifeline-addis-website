@@ -3,26 +3,26 @@ import Image from "next/image";
 function HomeNav() {
   return (
     <>
-      <header className="w-full flex items-center justify-between border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-0 py-2 sticky top-0 z-50">
+      <header className="w-full flex items-center justify-between     shadow-md border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-0 py-2 sticky top-0 z-50">
         <div className="flex  items-center gap-4 text-primary">
-          <div className="size-24">
+          <div className="w-1/2 h-1/2">
             <Image
-              width={192}
-              height={192}
-              className="w-full h-full"
+              width={96}
+              height={96}
+              className="w-1/2 h-1/2"
               src="/LLA-logo.svg"
               alt="Logo"
               priority
             />
           </div>
-          <h2 className="text-xl font-bold text-[#e63946]">HomeCare</h2>
+          
         </div>
 
-        <nav className="ml-auto flex items-center justify-end gap-4 pr-0">
+        <nav className="flex items-center justify-end gap-10 pr-0">
           {[
             ["Services", "services"],
-            ["How It Works", "how-it-works"],
-            ["About Us", "about-us"],
+            ["How", "how-it-works"],
+            ["About", "about-us"],
             ["Careers", "careers"],
             ["Testimonials", "testimonials"],
             ["Contact", "contact"],
@@ -30,7 +30,7 @@ function HomeNav() {
             <a
               key={id}
               href={`#${id}`}
-              className="text-base md:text-l font-medium text-[#0d141b] hover:text-primary transition cursor-pointer"
+              className="text-sm font-medium text-[#0d141b] hover:text-primary transition cursor-pointer"
             >
               {label}
             </a>
