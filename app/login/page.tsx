@@ -91,11 +91,12 @@ function Login() {
           <div className="px-8 lg:px-12 flex justify-between items-center">
             <div className="flex items-center gap-3 text-[#E01F29]">
               <Image
-                src="/tg_image_3199460643.jpeg"
+                src="/LLA-logo.svg"
                 alt="Logo"
                 width={240}
                 height={80}
                 className="object-contain"
+                priority
               />
             </div>
             <Link

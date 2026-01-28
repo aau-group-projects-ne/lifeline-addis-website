@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import HomeNav from "../Components/HomeNav.jsx";
 
 function Homepage() {
@@ -27,7 +28,6 @@ function Homepage() {
             Professional, personalized caregiving services tailored to your
             family's unique needs.
           </p>
-
           <div className="flex gap-4">
             <Link href="/login">
               <button className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:opacity-90 active:scale-[0.98]">
@@ -44,90 +44,87 @@ function Homepage() {
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="careers" className="bg-white py-16 scroll-mt-24">
-        <div className="text-center mb-12 mx-10 px-6">
-          <h1 className="font-bold text-5xl mb-4">Why Families Trust Us?</h1>
-          <p className="font-semibold text-xl md:mx-44">
-            We provide peace of mind for families through dedicated and
-            professional homecare services that prioritize dignity and
-            independence.
-          </p>
-        </div>
-        <div className="max-w-[1200px] mx-auto grid md:grid-cols-3 gap-6 px-6">
+      {/* STATS */}
+      <section className="bg-white py-12">
+        <div className="max-w-[1200px] mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           {[
-            [
-              "Trusted Care",
-              "Fully insured and background-checked caregivers.",
-            ],
-            ["Professional Staff", "Highly trained medical professionals."],
-            ["24/7 Availability", "Support and monitoring around the clock."],
-          ].map(([title, desc]) => (
-            <div key={title} className="p-8 rounded-xl border shadow-lg">
-              <h3 className="text-xl font-bold mb-2">{title}</h3>
-              <p className="text-slate-500">{desc}</p>
+            ["1,500+", "Families Supported"],
+            ["120+", "Certified Caregivers"],
+            ["24/7", "On-call Support"],
+            ["15+", "Years of Service"],
+          ].map(([value, label]) => (
+            <div
+              key={label}
+              className="rounded-xl border border-[#e63946]/10 p-6 shadow-sm"
+            >
+              <p className="text-4xl font-black text-[#e63946]">{value}</p>
+              <p className="mt-1 text-[#4c739a] font-medium">{label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section
-        id="services"
-        className="w-full px-4 md:px-10 flex flex-col bg-white py-14 gap-6 scroll-mt-24"
-      >
-        <div className="flex items-center flex-col md:px-28">
-          <div className="flex items-center justify-between border-b border-[#e63946]/10 pb-4 px-12 w-full">
-            <h2 className="text-[#0d141b] text-2xl font-bold leading-tight tracking-[-0.015em]">
-              Our Specialized Care Services
-            </h2>
-            <a
-              className="text-[#e63946] font-bold text-sm hover:underline"
-              href="#"
-            >
-              View All Services
-            </a>
-          </div>
-          <div className="grid gap-6 mt-8 sm:grid-cols-2 lg:grid-cols-3 w-full">
-            <div className="border border-[#e63946]/10 p-8 rounded-xl w-full shadow-md">
-              <h3 className="text-xl font-bold mb-2">General Consultation</h3>
-              <p className="text-slate-500">
-                Comprehensive health check-ups and consultations with our
-                experienced general practitioners.
-              </p>
-            </div>
-            <div className="border border-[#e63946]/10 p-8 rounded-xl w-full shadow-md">
-              <h3 className="text-xl font-bold mb-2">Pediatric Care</h3>
-              <p className="text-slate-500">
-                Specialized medical care for children, including check-ups,
-                vaccinations, and developmental assessments.
-              </p>
-            </div>
-            <div className="border border-[#e63946]/10 p-8 rounded-xl w-full shadow-md">
-              <h3 className="text-xl font-bold mb-2">Geriatric Care</h3>
-              <p className="text-slate-500">
-                Comprehensive healthcare services tailored for elderly patients,
-                focusing on chronic conditions and mobility.
-              </p>
-            </div>
+      {/* HOW IT WORKS */}
+      <section id="how-it-works" className="bg-white py-16 scroll-mt-24">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl font-black mb-8 text-[#0d141b]">
+            How It Works
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Sign Up", "Create an account and tell us your needs."],
+              ["Get Matched", "We recommend a caregiver or doctor for you."],
+              [
+                "First Visit",
+                "Schedule an initial assessment or consultation.",
+              ],
+              ["Ongoing Care", "Receive continuous support and updates."],
+            ].map(([title, desc], idx) => (
+              <div
+                key={title}
+                className="rounded-xl border border-[#e63946]/10 p-6 shadow-sm"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#e63946]/10 flex items-center justify-center font-bold text-[#e63946] mb-3">
+                  {idx + 1}
+                </div>
+                <h3 className="text-lg font-bold mb-1">{title}</h3>
+                <p className="text-slate-600 text-sm">{desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section id="contact" className="py-20 px-6 scroll-mt-24">
-        <div className="bg-white rounded-2xl p-12 text-center max-w-[1000px] mx-auto">
-          <h2 className="text-4xl font-black text-[#e63946] mb-4">
-            Ready to provide the best care?
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="bg-white py-16 scroll-mt-24">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <h2 className="text-3xl font-black mb-8 text-[#0d141b]">
+            What Families Say
           </h2>
-          <p className="mb-6 text-[#e63946]/30">
-            Schedule a free consultation today.
-          </p>
-          <Link href="/login">
-            <button className="bg-[#e63946] text-white px-8 py-4 rounded-xl border-[#e63946] font-bold cursor-pointer hover:opacity-90 active:scale-[0.98]">
-              Book My Consultation
-            </button>
-          </Link>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              [
+                "Kidist H.",
+                "The nurse was kind and professional. Our family felt supported.",
+              ],
+              [
+                "Yonatan M.",
+                "Booking a doctor for our parents was seamless and reassuring.",
+              ],
+              [
+                "Marta D.",
+                "Consistent updates and compassionate care—highly recommended.",
+              ],
+            ].map(([name, quote]) => (
+              <div
+                key={name}
+                className="rounded-xl border border-[#e63946]/10 p-6 shadow-sm"
+              >
+                <p className="text-[#0d141b] font-semibold">{name}</p>
+                <p className="text-slate-600 mt-2 text-sm">“{quote}”</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -138,10 +135,12 @@ function Homepage() {
             <div className="flex flex-col gap-4 md:ml-28">
               <div className="flex items-center gap-2 text-[#e63946]">
                 <div className="size-20 flex items-center justify-center">
-                  <img
-                    className="w-full h-full"
-                    src="/assets/tg_image_3199460643.jpeg"
+                  <Image
+                    src="/LLA-logo.svg"
                     alt="Logo"
+                    width={80}
+                    height={80}
+                    priority
                   />
                 </div>
               </div>

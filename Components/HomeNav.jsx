@@ -7,21 +7,24 @@ function HomeNav() {
         <div className="flex items-center gap-4 text-primary">
           <div className="size-12">
             <Image
-              width={100}
-              height={100}
+              width={96}
+              height={96}
               className="w-full h-full"
-              src="/tg_image_3199460643.jpeg"
+              src="/LLA-logo.svg"
               alt="Logo"
+              priority
             />
           </div>
           <h2 className="text-xl font-bold">HomeCare</h2>
         </div>
 
-        <nav className="flex gap-9 pr-12">
+        <nav className="flex items-center gap-9 pr-12">
           {[
             ["Services", "services"],
+            ["How It Works", "how-it-works"],
             ["About Us", "about-us"],
             ["Careers", "careers"],
+            ["Testimonials", "testimonials"],
             ["Contact", "contact"],
           ].map(([label, id]) => (
             <a
@@ -32,6 +35,12 @@ function HomeNav() {
               {label}
             </a>
           ))}
+          <a
+            href="/signup"
+            className="ml-4 px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold cursor-pointer hover:opacity-90 active:scale-[0.98]"
+          >
+            Get Care
+          </a>
         </nav>
       </header>
     </>

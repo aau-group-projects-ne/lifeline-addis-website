@@ -174,10 +174,11 @@ function Signup() {
         <div className="px-8 flex items-center justify-between">
           <span className="font-bold text-xl text-[#E01F29]">
             <Image
-              src="/tg_image_3199460643.jpeg"
+              src="/LLA-logo.svg"
               alt="Logo"
               width={80}
               height={80}
+              priority
             />
           </span>
           <Link
