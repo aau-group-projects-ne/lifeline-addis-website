@@ -201,7 +201,7 @@ function Signup() {
             {/* USER TYPE */}
             <fieldset className="flex gap-6 items-center">
               <legend className="sr-only">User Type</legend>
-              {["Patient", "Doctor", "Nurse"].map((type) => (
+              {["patient", "doctor", "nurse"].map((type) => (
                 <label
                   key={type}
                   className="flex gap-2 items-center capitalize"
@@ -218,9 +218,30 @@ function Signup() {
               ))}
             </fieldset>
 
-            <p className="flex w-full text-center font-medium">
-              You are signing up as a {form.userType}.
-            </p>
+            {/* ROLE MESSAGING */}
+            <div className="rounded-xl bg-slate-50 p-4 text-sm">
+              {form.userType === "patient" && (
+                <p>
+                  You are signing up as a{" "}
+                  <span className="font-bold">patient</span> to request care.
+                  We'll help connect you with nurses and doctors.
+                </p>
+              )}
+              {form.userType === "nurse" && (
+                <p>
+                  You are signing up as a{" "}
+                  <span className="font-bold">nurse</span> to apply for a job
+                  and care for others.
+                </p>
+              )}
+              {form.userType === "doctor" && (
+                <p>
+                  You are applying as a{" "}
+                  <span className="font-bold">doctor</span> to perform initial
+                  examinations and support patient assessments.
+                </p>
+              )}
+            </div>
 
             {/* INPUTS */}
             {[
