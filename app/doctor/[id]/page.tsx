@@ -2,11 +2,25 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-function DoctorDashboard({ params }) {
-  const [doctor, setDoctor] = useState(null);
-  const [patients, setPatients] = useState([]);
-  const [assessments, setAssessments] = useState([]);
-  const [form, setForm] = useState({
+type Doctor = { id: number; name: string; specialty?: string };
+type Patient = { id: number; name: string; age?: number };
+type Assessment = {
+  id: number;
+  patientId: number;
+  document: string;
+  estimatedPrice: number;
+  createdAt: string | Date;
+};
+
+function DoctorDashboard({ params }: { params: { id: string } }) {
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [form, setForm] = useState<{
+    patientId: string;
+    document: string;
+    estimatedPrice: string;
+  }>({
     patientId: "",
     document: "",
     estimatedPrice: "",
@@ -24,14 +38,19 @@ function DoctorDashboard({ params }) {
     loadDoctor();
   }, [params.id]);
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.patientId || !form.document || !form.estimatedPrice) return;
+    if (!doctor) return;
 
     const payload = {
       patientId: form.patientId,
@@ -52,7 +71,7 @@ function DoctorDashboard({ params }) {
     setForm({ patientId: "", document: "", estimatedPrice: "" });
   };
 
-  const getPatientName = (id) =>
+  const getPatientName = (id: number) =>
     patients.find((p) => p.id === id)?.name || "Unknown";
 
   if (!doctor) return <p>Loading...</p>;

@@ -6,6 +6,8 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient };
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
+    // Provide the datasource URL via client config for Prisma v6/7 compatibility
+    datasourceUrl: process.env.DATABASE_URL,
     log: ["query", "error", "warn"],
   });
 

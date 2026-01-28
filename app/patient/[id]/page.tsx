@@ -31,6 +31,7 @@ interface Patient {
 }
 
 interface Caregiver {
+  id: number;
   name: string;
   contact: string;
 }
@@ -56,9 +57,14 @@ function PatientPage() {
         const data: Patient = await res.json();
         setPatient(data);
 
-        if (data.assessments?.length > 0 && data.assessments[0].doctor) {
-          const doctor = data.assessments[0].doctor;
-          setCaregiver({ name: doctor.name, contact: doctor.email });
+        const firstAssessment = data.assessments?.[0];
+        if (firstAssessment?.doctor) {
+          const doctor = firstAssessment.doctor;
+          setCaregiver({
+            id: doctor.id,
+            name: doctor.name,
+            contact: doctor.email,
+          });
         }
       } catch (err) {
         console.error("Failed to fetch patient", err);
@@ -104,11 +110,16 @@ function PatientPage() {
                     <p className="font-semibold">
                       Contact: {caregiver.contact}
                     </p>
+                    <div className="mt-4">
+                      <CaregiverRatingForm
+                        patientId={patientId}
+                        caregiverId={caregiver.id}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <p>No caregiver assigned</p>
                 )}
-                <CaregiverRatingForm />
               </div>
 
               <div className="flex justify-between">
@@ -120,7 +131,16 @@ function PatientPage() {
 
             <aside className="w-full lg:w-[320px] space-y-4">
               <div className="bg-white p-6 rounded-xl border">
-                <FileUploadBox />
+                {patient.assessments && patient.assessments.length > 0 ? (
+                  <FileUploadBox
+                    patientId={patient.id}
+                    assessmentId={patient.assessments[0].id}
+                  />
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    No assessments available yet.
+                  </p>
+                )}
               </div>
               <div className="bg-[#E01F29]/10 border border-[#E01F29]/20 rounded-xl p-6">
                 <p className="text-sm mb-4">

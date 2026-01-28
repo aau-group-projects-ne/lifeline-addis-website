@@ -1,13 +1,14 @@
 // app/api/doctor/[id]/route.ts
+export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: { params: Promise<{ id: string }> },
 ) {
-  const { id } = params;
+  const { id } = await context.params;
   console.log("API route hit. Looking up doctor with userId:", id);
 
   if (!id) {

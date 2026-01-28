@@ -1,12 +1,23 @@
 "use client";
 import { useState } from "react";
 
-const timeToMinutes = (t) => {
+type TimeRange = { days: string[]; start: string; end: string };
+type Doctor = { id: string; name: string; availability: TimeRange };
+type Nurse = { id: string; name: string; availability: TimeRange };
+type Patient = {
+  id: string;
+  name: string;
+  careSchedule: TimeRange;
+  doctorId: string;
+  nurseIds: string[];
+};
+
+const timeToMinutes = (t: string): number => {
   const [h, m] = t.split(":").map(Number);
   return h * 60 + m;
 };
 
-const schedulesOverlap = (a, b) => {
+const schedulesOverlap = (a: TimeRange, b: TimeRange): boolean => {
   const dayOverlap = a.days.some((d) => b.days.includes(d));
   if (!dayOverlap) return false;
 
@@ -19,7 +30,7 @@ const schedulesOverlap = (a, b) => {
 };
 
 function Admin() {
-  const doctors = [
+  const doctors: Doctor[] = [
     {
       id: "doc_001",
       name: "Dr. Samuel Bekele",
@@ -40,7 +51,7 @@ function Admin() {
     },
   ];
 
-  const nurses = [
+  const nurses: Nurse[] = [
     {
       id: "nurse_001",
       name: "Nurse Selam",
@@ -61,7 +72,7 @@ function Admin() {
     },
   ];
 
-  const [patients, setPatients] = useState([
+  const [patients, setPatients] = useState<Patient[]>([
     {
       id: "pat_001",
       name: "Martha Smith",
@@ -77,7 +88,7 @@ function Admin() {
 
   const [error, setError] = useState("");
 
-  const assignDoctor = (patient, doctor) => {
+  const assignDoctor = (patient: Patient, doctor: Doctor) => {
     if (!schedulesOverlap(patient.careSchedule, doctor.availability)) {
       setError("❌ Doctor schedule does not match patient care schedule");
       return;
@@ -91,7 +102,7 @@ function Admin() {
     );
   };
 
-  const toggleNurse = (patient, nurse) => {
+  const toggleNurse = (patient: Patient, nurse: Nurse) => {
     if (!schedulesOverlap(patient.careSchedule, nurse.availability)) {
       setError("❌ Nurse schedule does not match patient care schedule");
       return;
