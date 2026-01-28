@@ -176,21 +176,21 @@ function Signup() {
       <div className="w-full lg:w-1/2 flex flex-col overflow-hidden">
         {/* HEADER */}
         <div className="px-8 flex items-center justify-between">
-          <span className="font-bold text-xl text-[#E01F29]">
+          <span className="font-bold text-xl text-[#E01F29] w-full h-full">
             <Image
               src="/LLA-logo.svg"
               alt="Logo"
-              width={80}
-              height={80}
+              width={200}
+              height={200}
               priority
             />
-          </span>
+          </span><div >
           <Link
             href="/"
             className="text-[#E01F29] text-md font-semibold w-full"
           >
             Home
-          </Link>
+          </Link></div>
         </div>
 
         {/* SIGNUP FORM */}
