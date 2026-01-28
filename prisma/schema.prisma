@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-
 }
 
 model assessment {
@@ -15,13 +14,13 @@ model assessment {
   document       String
   estimatedPrice Float
   createdAt      DateTime  @default(now())
-  user           user      @relation(fields: [doctorId], references: [id], map: "Assessment_doctorId_fkey")
-  patient        patient   @relation(fields: [patientId], references: [id], map: "Assessment_patientId_fkey")
-  payment        payment[]
-  update         update[]
+  doctor         user      @relation("DoctorAssessments", fields: [doctorId], references: [id])
+  patient        patient   @relation("PatientAssessments", fields: [patientId], references: [id])
+  payments       payment[] @relation("AssessmentPayments")
+  updates        update[]  @relation("AssessmentUpdates")
 
-  @@index([doctorId], map: "Assessment_doctorId_fkey")
-  @@index([patientId], map: "Assessment_patientId_fkey")
+  @@index([doctorId])
+  @@index([patientId])
 }
 
 model assignment {
@@ -29,21 +28,24 @@ model assignment {
   patientId  Int
   nurseId    Int
   assignedAt DateTime @default(now())
-  user       user     @relation(fields: [nurseId], references: [id], map: "Assignment_nurseId_fkey")
-  patient    patient  @relation(fields: [patientId], references: [id], map: "Assignment_patientId_fkey")
+  nurse      user     @relation("NurseAssignments", fields: [nurseId], references: [id])
+  patient    patient  @relation("PatientAssignments", fields: [patientId], references: [id])
 
-  @@index([nurseId], map: "Assignment_nurseId_fkey")
-  @@index([patientId], map: "Assignment_patientId_fkey")
+  @@index([nurseId])
+  @@index([patientId])
 }
 
 model patient {
-  id         Int          @id @default(autoincrement())
-  userId     Int          @unique(map: "Patient_userId_key")
-  assessment assessment[]
-  assignment assignment[]
-  user       user         @relation(fields: [userId], references: [id], map: "Patient_userId_fkey")
-  payment    payment[]
-  rating     rating[]
+  id          Int          @id @default(autoincrement())
+  userId      Int          @unique
+  age         Int?
+  sex         String?
+  phoneNumber String?
+  assessments assessment[] @relation("PatientAssessments")
+  assignments assignment[] @relation("PatientAssignments")
+  user        user         @relation("UserPatient", fields: [userId], references: [id])
+  payments    payment[]    @relation("PatientPayments")
+  ratings     rating[]     @relation("PatientRatings")
 }
 
 model payment {
@@ -52,11 +54,11 @@ model payment {
   assessmentId Int
   slipUrl      String
   uploadedAt   DateTime   @default(now())
-  assessment   assessment @relation(fields: [assessmentId], references: [id], map: "Payment_assessmentId_fkey")
-  patient      patient    @relation(fields: [patientId], references: [id], map: "Payment_patientId_fkey")
+  assessment   assessment @relation("AssessmentPayments", fields: [assessmentId], references: [id])
+  patient      patient    @relation("PatientPayments", fields: [patientId], references: [id])
 
-  @@index([assessmentId], map: "Payment_assessmentId_fkey")
-  @@index([patientId], map: "Payment_patientId_fkey")
+  @@index([assessmentId])
+  @@index([patientId])
 }
 
 model rating {
@@ -66,11 +68,11 @@ model rating {
   score       Int
   comment     String?
   createdAt   DateTime @default(now())
-  patient     patient  @relation(fields: [patientId], references: [id], map: "Rating_patientId_fkey")
-  user        user     @relation(fields: [ratedUserId], references: [id], map: "Rating_ratedUserId_fkey")
+  patient     patient  @relation("PatientRatings", fields: [patientId], references: [id])
+  ratedUser   user     @relation("RatingsGiven", fields: [ratedUserId], references: [id])
 
-  @@index([patientId], map: "Rating_patientId_fkey")
-  @@index([ratedUserId], map: "Rating_ratedUserId_fkey")
+  @@index([patientId])
+  @@index([ratedUserId])
 }
 
 model update {
@@ -79,24 +81,24 @@ model update {
   nurseId      Int
   statusUpdate String
   updatedAt    DateTime   @default(now())
-  assessment   assessment @relation(fields: [assessmentId], references: [id], map: "Update_assessmentId_fkey")
-  user         user       @relation(fields: [nurseId], references: [id], map: "Update_nurseId_fkey")
+  assessment   assessment @relation("AssessmentUpdates", fields: [assessmentId], references: [id])
+  nurse        user       @relation("NurseUpdates", fields: [nurseId], references: [id])
 
-  @@index([assessmentId], map: "Update_assessmentId_fkey")
-  @@index([nurseId], map: "Update_nurseId_fkey")
+  @@index([assessmentId])
+  @@index([nurseId])
 }
 
 model user {
-  id         Int          @id @default(autoincrement())
-  name       String
-  email      String       @unique(map: "User_email_key")
-  password   String
-  role       user_role
-  assessment assessment[]
-  assignment assignment[]
-  patient    patient?
-  rating     rating[]
-  update     update[]
+  id                Int          @id @default(autoincrement())
+  name              String
+  email             String       @unique
+  password          String
+  role              user_role
+  doctorAssessments assessment[] @relation("DoctorAssessments")
+  nurseAssignments  assignment[] @relation("NurseAssignments")
+  patient           patient?     @relation("UserPatient")
+  ratingsGiven      rating[]     @relation("RatingsGiven")
+  nurseUpdates      update[]     @relation("NurseUpdates")
 }
 
 enum user_role {

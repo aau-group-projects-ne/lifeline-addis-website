@@ -1,322 +1,181 @@
-"use client";
-import { useState } from "react";
+import Link from "next/link.js";
+import HomeNav from "../Components/HomeNav.jsx";
 
-export default function HomePage() {
-  // Auth
-  const [regForm, setRegForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "patient",
-  });
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-
-  // Doctor
-  const [docPatientId, setDocPatientId] = useState("");
-  const [docDocument, setDocDocument] = useState("");
-  const [docPrice, setDocPrice] = useState("");
-
-  // Nurse
-  const [nurseAssessmentId, setNurseAssessmentId] = useState("");
-  const [nurseStatus, setNurseStatus] = useState("");
-
-  // Rating
-  const [ratingPatientId, setRatingPatientId] = useState("");
-  const [ratingUserId, setRatingUserId] = useState("");
-  const [ratingScore, setRatingScore] = useState(5);
-  const [ratingComment, setRatingComment] = useState("");
-
-  // Payment Slip
-  const [payPatientId, setPayPatientId] = useState("");
-  const [payAssessmentId, setPayAssessmentId] = useState("");
-  const [payFile, setPayFile] = useState<File | null>(null);
-
-  // Helper: fetch with token
-  async function api(path: string, options: RequestInit = {}) {
-    const token = localStorage.getItem("token");
-    const headers: HeadersInit = {
-      ...(options.headers || {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-    const res = await fetch(`/api${path}`, { ...options, headers });
-    if (!res.ok) {
-      const text = await res.text(); // fallback if not JSON
-      throw new Error(`Request failed: ${res.status} ${text}`);
-    }
-
-    return res.json();
-  }
-
-  // Handlers
-  async function handleRegister() {
-    await api("/auth/register", {
-      method: "POST",
-      body: JSON.stringify(regForm),
-    });
-    alert("Registered!");
-  }
-
-  async function handleLogin() {
-    const res = await api("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email: loginEmail, password: loginPassword }),
-    });
-    localStorage.setItem("token", res.token);
-    alert("Logged in!");
-  }
-
-  async function createAssessment() {
-    await api("/assessments", {
-      method: "POST",
-      body: JSON.stringify({
-        patientId: Number(docPatientId),
-        doctorId: 1, // replace with logged-in doctor ID
-        document: docDocument,
-        estimatedPrice: Number(docPrice),
-      }),
-    });
-    alert("Assessment created!");
-  }
-
-  async function addUpdate() {
-    await api("/updates", {
-      method: "POST",
-      body: JSON.stringify({
-        assessmentId: Number(nurseAssessmentId),
-        nurseId: 2, // replace with logged-in nurse ID
-        statusUpdate: nurseStatus,
-      }),
-    });
-    alert("Update added!");
-  }
-
-  async function submitRating() {
-    await api("/ratings", {
-      method: "POST",
-      body: JSON.stringify({
-        patientId: Number(ratingPatientId),
-        ratedUserId: Number(ratingUserId),
-        score: Number(ratingScore),
-        comment: ratingComment,
-      }),
-    });
-    alert("Rating submitted!");
-  }
-
-  async function uploadSlip() {
-    if (!payFile) return alert("Select a file first!");
-    const formData = new FormData();
-    formData.append("slip", payFile);
-    formData.append("patientId", payPatientId);
-    formData.append("assessmentId", payAssessmentId);
-
-    await api("/payments/upload", { method: "POST", body: formData });
-    alert("Slip uploaded!");
-  }
-
+function Homepage() {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
-      <h1 className="text-3xl font-bold mb-8">🏥 Medical Home Care Demo</h1>
+    <div className="bg-background-light text-[#0d141b] min-h-screen">
+      {/* HEADER */}
+      <HomeNav />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
-        {/* Register */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Register</h2>
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Name"
-            value={regForm.name}
-            onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Email"
-            value={regForm.email}
-            onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            type="password"
-            placeholder="Password"
-            value={regForm.password}
-            onChange={(e) =>
-              setRegForm({ ...regForm, password: e.target.value })
-            }
-          />
-          <select
-            className="border p-2 w-full mb-2"
-            value={regForm.role}
-            onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
-          >
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="nurse">Nurse</option>
-            <option value="admin">Admin</option>
-          </select>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
-            onClick={handleRegister}
-          >
-            Register
-          </button>
-        </section>
+      {/* HERO */}
+      <section
+        id="About Us"
+        className="max-w-[1200px] mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center"
+      >
+        <div
+          className="aspect-video rounded-xl bg-cover bg-center shadow-xl"
+          style={{
+            backgroundImage:
+              'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfyqH-5lx2EPsqIm6sVFlaRu-9LBYo_1XSJICZVFEXlHg6TarRgJLqR0ab0rBWLTwao1GLPn3Pa8_1aP_Mcme60M4XaCo-dVC6aENUub4N7uzEDyqTcLwiK2LfsxsCWvGdTFsuR0MZVaSYa37fRbsBt6DOjvHFE17Z1kYo5HsJxHI1I3j-XNt3n2DbWII7sYFuj2TjKXc66SuV7zVfOqD_0WDzb5zT8kp3HDOQbEh5vfctsoJzJPPOUA9t-uJ6_RNg6hdYLKnlCyY")',
+          }}
+        />
 
-        {/* Login */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Login</h2>
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Email"
-            value={loginEmail}
-            onChange={(e) => setLoginEmail(e.target.value)}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            type="password"
-            placeholder="Password"
-            value={loginPassword}
-            onChange={(e) => setLoginPassword(e.target.value)}
-          />
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-        </section>
+        <div>
+          <h1 className="text-5xl font-black mb-4">
+            Compassionate Care in the Comfort of Your Home
+          </h1>
+          <p className="text-lg text-slate-500 mb-6">
+            Professional, personalized caregiving services tailored to your
+            family's unique needs.
+          </p>
 
-        {/* Doctor */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Doctor Assessment</h2>
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Patient ID"
-            value={docPatientId}
-            onChange={(e) => setDocPatientId(e.target.value)}
-          />
-          <textarea
-            className="border p-2 w-full mb-2"
-            placeholder="Document"
-            value={docDocument}
-            onChange={(e) => setDocDocument(e.target.value)}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Estimated Price"
-            value={docPrice}
-            onChange={(e) => setDocPrice(e.target.value)}
-          />
-          <button
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-full"
-            onClick={createAssessment}
-          >
-            Create Assessment
-          </button>
-        </section>
-
-        {/* Nurse */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Nurse Update</h2>
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Assessment ID"
-            value={nurseAssessmentId}
-            onChange={(e) => setNurseAssessmentId(e.target.value)}
-          />
-          <textarea
-            className="border p-2 w-full mb-2"
-            placeholder="Status Update"
-            value={nurseStatus}
-            onChange={(e) => setNurseStatus(e.target.value)}
-          />
-          <button
-            className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 w-full"
-            onClick={addUpdate}
-          >
-            Add Update
-          </button>
-        </section>
-
-        {/* Rating */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Patient Rating</h2>
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Patient ID"
-            value={ratingPatientId}
-            onChange={(e) => setRatingPatientId(e.target.value)}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            placeholder="Rated User ID"
-            value={ratingUserId}
-            onChange={(e) => setRatingUserId(e.target.value)}
-          />
-          <input
-            className="border p-2 w-full mb-2"
-            type="number"
-            min="1"
-            max="5"
-            value={ratingScore}
-            onChange={(e) => setRatingScore(Number(e.target.value))}
-          />
-          <textarea
-            className="border p-2 w-full mb-2"
-            placeholder="Comment"
-            value={ratingComment}
-            onChange={(e) => setRatingComment(e.target.value)}
-          />
-          <button
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full"
-            onClick={submitRating}
-          >
-            Submit Rating
-          </button>
-        </section>
-
-        {/* Payment Slip */}
-        <section className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            💳 Upload Payment Slip
-          </h2>
-
-          <div className="space-y-3">
-            <input
-              className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
-              placeholder="Patient ID"
-              value={payPatientId}
-              onChange={(e) => setPayPatientId(e.target.value)}
-            />
-
-            <input
-              className="border rounded p-2 w-full focus:ring-2 focus:ring-blue-400"
-              placeholder="Assessment ID"
-              value={payAssessmentId}
-              onChange={(e) => setPayAssessmentId(e.target.value)}
-            />
-
-            <input
-              type="file"
-              className="block w-full text-sm text-gray-500 
-                 file:mr-4 file:py-2 file:px-4
-                 file:rounded-full file:border-0
-                 file:text-sm file:font-semibold
-                 file:bg-blue-50 file:text-blue-700
-                 hover:file:bg-blue-100"
-              onChange={(e) => setPayFile(e.target.files?.[0] || null)}
-            />
-
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded w-full 
-                 hover:bg-blue-700 transition-colors"
-              onClick={uploadSlip}
-            >
-              Upload Slip
+          <div className="flex gap-4">
+            <Link href="/login">
+              <button className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold">
+                Book a Consultation
+              </button>
+            </Link>
+            <button className="border-2 border-[#e63946] text-[#e63946] px-6 py-3 rounded-xl font-bold">
+              View Services
             </button>
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="Careers" className="bg-white py-16">
+        <div className="text-center mb-12 mx-10 px-6">
+          <h1 className="font-bold text-5xl mb-4">Why Families Trust Us?</h1>
+          <p className="font-semibold text-xl mx-44">
+            We provide peace of mind for families through dedicated and
+            professional homecare services that prioritize dignity and
+            independence.
+          </p>
+        </div>
+        <div className="max-w-[1200px] mx-auto grid md:grid-cols-3 gap-6 px-6">
+          {[
+            [
+              "Trusted Care",
+              "Fully insured and background-checked caregivers.",
+            ],
+            ["Professional Staff", "Highly trained medical professionals."],
+            ["24/7 Availability", "Support and monitoring around the clock."],
+          ].map(([title, desc]) => (
+            <div key={title} className="p-8 rounded-xl border shadow-lg">
+              <h3 className="text-xl font-bold mb-2">{title}</h3>
+              <p className="text-slate-500">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <div
+        id="Services"
+        className="w-full px-4 md:px-10 flex flex-col bg-white py-14 gap-6"
+      >
+        <div className="flex items-center flex-col px-28">
+          <div className="flex items-center justify-between border-b border-[#e63946]/10 pb-4 px-12 w-full">
+            <h2 className="text-[#0d141b] text-2xl font-bold leading-tight tracking-[-0.015em]">
+              Our Specialized Care Services
+            </h2>
+            <a
+              className="text-[#e63946] font-bold text-sm hover:underline"
+              href="#"
+            >
+              View All Services
+            </a>
+          </div>
+          <div className="flex items-center justify-between gap-24 mt-8">
+            <div className="border border-[#e63946]/10 p-8 rounded-xl w-1/3 shadow-md">
+              <h3 className="text-xl font-bold mb-2">General Consultation</h3>
+              <p className="text-slate-500">
+                Comprehensive health check-ups and consultations with our
+                experienced general practitioners.
+              </p>
+            </div>
+            <div className="border border-[#e63946]/10 p-8 rounded-xl w-1/3 shadow-md">
+              <h3 className="text-xl font-bold mb-2">Pediatric Care</h3>
+              <p className="text-slate-500">
+                Specialized medical care for children, including check-ups,
+                vaccinations, and developmental assessments.
+              </p>
+            </div>
+            <div className="border border-[#e63946]/10 p-8 rounded-xl w-1/3 shadow-md">
+              <h3 className="text-xl font-bold mb-2">Geriatric Care</h3>
+              <p className="text-slate-500">
+                Comprehensive healthcare services tailored for elderly patients,
+                focusing on chronic conditions and mobility.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* CTA */}
+      <section id="Contact" className="py-20 px-6">
+        <div className="bg-white text-white rounded-2xl p-12 text-center max-w-[1000px] mx-auto">
+          <h2 className="text-4xl font-black text-[#e63946] mb-4">
+            Ready to provide the best care?
+          </h2>
+          <p className="mb-6 text-[#e63946]/30">
+            Schedule a free consultation today.
+          </p>
+          <Link href="/login">
+            <button className="bg-[#e63946] text-white px-8 py-4 rounded-xl border-[#e63946] font-bold">
+              Book My Consultation
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <section>
+        <footer className="border-t border-[#e63946]/10 py-10 text-center text-sm text-slate-500">
+          <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 ">
+            <div className="flex flex-col gap-4 ml-28">
+              <div className="flex items-center gap-2 text-[#e63946]">
+                <div className="size-20 flex items-center justify-center">
+                  <img
+                    className="w-full h-full"
+                    src="../assets/tg_image_3199460643.jpeg"
+                    alt="Logo"
+                  />
+                </div>
+              </div>
+              <p className="text-[#4c739a] text-sm">
+                Professional caregiving you can trust, delivered with compassion
+                and excellence since 2010.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[#0d141b] font-bold mb-4">Quick Links</h4>
+              <ul className="flex flex-col gap-2 text-sm text-[#4c739a]">
+                <li>
+                  <a className="hover:text-[#e63946]" href="#Services">
+                    Services
+                  </a>
+                </li>
+                <li>
+                  <a className="hover:text-[#e63946]" href="#About Us">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a className="hover:text-[#e63946]" href="#Careers">
+                    Careers
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="max-w-[1200px] mx-auto mt-12 pt-8 border-t border-[#e63946]/5 text-center text-sm text-[#4c739a]">
+            © 2024 Lifeline Addis. All rights reserved.
+          </div>
+        </footer>
+      </section>
     </div>
   );
 }
+
+export default Homepage;
