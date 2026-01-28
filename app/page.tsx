@@ -34,12 +34,7 @@ function Homepage() {
                 Book a Consultation
               </button>
             </Link>
-            <a
-              href="#services"
-              className="border-2 border-[#e63946] text-[#e63946] px-6 py-3 rounded-xl font-bold cursor-pointer hover:bg-[#e63946]/5 active:scale-[0.98]"
-            >
-              View Services
-            </a>
+            
           </div>
         </div>
       </section>
