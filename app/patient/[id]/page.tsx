@@ -81,7 +81,7 @@ function PatientPage() {
 
   return (
     <div className="bg-background-light min-h-screen">
-      <Navbar />
+      <Navbar showAppointments={false} />
       <main className="flex justify-center py-10 px-28 lg:px-40">
         <div className="max-w-[1200px] w-full space-y-8">
           <div className="ml-2">
