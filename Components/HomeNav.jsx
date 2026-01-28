@@ -5,17 +5,17 @@ function HomeNav() {
     <>
       <header className="flex items-center justify-between border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-10 py-3 sticky top-0 z-50">
         <div className="flex items-center gap-4 text-primary">
-          <div className="size-12">
+          <div className="size-16">
             <Image
-              width={96}
-              height={96}
+              width={128}
+              height={128}
               className="w-full h-full"
               src="/LLA-logo.svg"
               alt="Logo"
               priority
             />
           </div>
-          <h2 className="text-xl font-bold">HomeCare</h2>
+          <h2 className="text-xl font-bold text-[#e63946]">HomeCare</h2>
         </div>
 
         <nav className="flex items-center gap-9 pr-12">
