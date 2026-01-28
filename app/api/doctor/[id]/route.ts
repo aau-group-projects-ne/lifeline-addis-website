@@ -1,9 +1,10 @@
 // app/api/doctor/[id]/route.ts
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } },
 ) {
   const { id } = params;
@@ -19,11 +20,11 @@ export async function GET(
       include: {
         doctorAssessments: {
           include: {
-            patient: true, // patient linked to each assessment
-            updates: { include: { nurse: true } }, // updates with nurse info
+            patient: true,
+            updates: { include: { nurse: true } },
           },
         },
-        ratingsGiven: true, // ratings this doctor has given (optional)
+        ratingsGiven: true,
       },
     });
 
