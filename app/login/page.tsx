@@ -173,7 +173,7 @@ function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-14 bg-[#E01F29] hover:bg-[#c81a24] text-white font-bold rounded-xl shadow-lg shadow-[#E01F29]/20 active:scale-[0.98] disabled:opacity-60"
+                  className="w-full h-14 bg-[#E01F29] hover:bg-[#c81a24] text-white font-bold rounded-xl shadow-lg shadow-[#E01F29]/20 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
                 >
                   {loading ? "Signing in..." : "Sign In"}
                 </button>

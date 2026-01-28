@@ -160,7 +160,7 @@ function NurseDashboard({ nurseId }: { nurseId: string }) {
           </div>
           <button
             type="submit"
-            className="w-full bg-[#e63946] text-white py-3 rounded-xl font-bold"
+            className="w-full bg-[#e63946] text-white py-3 rounded-xl font-bold cursor-pointer active:scale-[0.98] hover:opacity-90"
           >
             Submit Update
           </button>

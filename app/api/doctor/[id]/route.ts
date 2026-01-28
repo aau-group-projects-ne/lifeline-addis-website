@@ -21,7 +21,7 @@ export async function GET(
       include: {
         doctorAssessments: {
           include: {
-            patient: true,
+            patient: { include: { user: true } },
             updates: { include: { nurse: true } },
           },
         },

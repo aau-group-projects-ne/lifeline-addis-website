@@ -31,9 +31,29 @@ function DoctorDashboard({ params }: { params: { id: string } }) {
     const loadDoctor = async () => {
       const res = await fetch(`/api/doctor/${params.id}`);
       const data = await res.json();
-      setDoctor(data);
-      setPatients(data.patients || []);
-      setAssessments(data.assessments || []);
+      setDoctor({
+        id: data.id,
+        name: data.name,
+        specialty: (data as any).specialty,
+      });
+      const assessmentsRaw = data.doctorAssessments || [];
+      const patientsMap = new Map<number, Patient>();
+      const assessmentsList: Assessment[] = assessmentsRaw.map((a: any) => {
+        const p = a.patient;
+        const name = p?.user?.name || `Patient #${p?.id}`;
+        if (p && !patientsMap.has(p.id)) {
+          patientsMap.set(p.id, { id: p.id, name, age: p.age ?? undefined });
+        }
+        return {
+          id: a.id,
+          patientId: a.patientId,
+          document: a.document,
+          estimatedPrice: a.estimatedPrice,
+          createdAt: a.createdAt,
+        };
+      });
+      setPatients(Array.from(patientsMap.values()));
+      setAssessments(assessmentsList);
     };
     loadDoctor();
   }, [params.id]);
@@ -158,7 +178,7 @@ function DoctorDashboard({ params }: { params: { id: string } }) {
 
             <button
               type="submit"
-              className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold"
+              className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:opacity-90 active:scale-[0.98]"
             >
               Save Assessment
             </button>
