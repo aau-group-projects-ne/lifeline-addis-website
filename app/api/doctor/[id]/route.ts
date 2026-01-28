@@ -1,4 +1,5 @@
 // app/api/doctor/[id]/route.ts
+<<<<<<< HEAD
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -7,6 +8,18 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   const { id } = params;
+=======
+export const runtime = "nodejs";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  const { id } = await context.params;
+>>>>>>> main
   console.log("API route hit. Looking up doctor with userId:", id);
 
   if (!id) {
@@ -19,11 +32,19 @@ export async function GET(
       include: {
         doctorAssessments: {
           include: {
+<<<<<<< HEAD
             patient: true, // patient linked to each assessment
             updates: { include: { nurse: true } }, // updates with nurse info
           },
         },
         ratingsGiven: true, // ratings this doctor has given (optional)
+=======
+            patient: { include: { user: true } },
+            updates: { include: { nurse: true } },
+          },
+        },
+        ratingsGiven: true,
+>>>>>>> main
       },
     });
 

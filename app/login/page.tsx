@@ -91,11 +91,19 @@ function Login() {
           <div className="px-8 lg:px-12 flex justify-between items-center">
             <div className="flex items-center gap-3 text-[#E01F29]">
               <Image
+<<<<<<< HEAD
                 src="/tg_image_3199460643.jpeg"
+=======
+                src="/LLA-logo.svg"
+>>>>>>> main
                 alt="Logo"
                 width={240}
                 height={80}
                 className="object-contain"
+<<<<<<< HEAD
+=======
+                priority
+>>>>>>> main
               />
             </div>
             <Link
@@ -173,7 +181,11 @@ function Login() {
                 <button
                   type="submit"
                   disabled={loading}
+<<<<<<< HEAD
                   className="w-full h-14 bg-[#E01F29] hover:bg-[#c81a24] text-white font-bold rounded-xl shadow-lg shadow-[#E01F29]/20 active:scale-[0.98] disabled:opacity-60"
+=======
+                  className="w-full h-14 bg-[#E01F29] hover:bg-[#c81a24] text-white font-bold rounded-xl shadow-lg shadow-[#E01F29]/20 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+>>>>>>> main
                 >
                   {loading ? "Signing in..." : "Sign In"}
                 </button>

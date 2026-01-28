@@ -31,6 +31,10 @@ interface Patient {
 }
 
 interface Caregiver {
+<<<<<<< HEAD
+=======
+  id: number;
+>>>>>>> main
   name: string;
   contact: string;
 }
@@ -56,9 +60,20 @@ function PatientPage() {
         const data: Patient = await res.json();
         setPatient(data);
 
+<<<<<<< HEAD
         if (data.assessments?.length > 0 && data.assessments[0].doctor) {
           const doctor = data.assessments[0].doctor;
           setCaregiver({ name: doctor.name, contact: doctor.email });
+=======
+        const firstAssessment = data.assessments?.[0];
+        if (firstAssessment?.doctor) {
+          const doctor = firstAssessment.doctor;
+          setCaregiver({
+            id: doctor.id,
+            name: doctor.name,
+            contact: doctor.email,
+          });
+>>>>>>> main
         }
       } catch (err) {
         console.error("Failed to fetch patient", err);
@@ -75,7 +90,11 @@ function PatientPage() {
 
   return (
     <div className="bg-background-light min-h-screen">
+<<<<<<< HEAD
       <Navbar />
+=======
+      <Navbar showAppointments={false} />
+>>>>>>> main
       <main className="flex justify-center py-10 px-28 lg:px-40">
         <div className="max-w-[1200px] w-full space-y-8">
           <div className="ml-2">
@@ -104,11 +123,23 @@ function PatientPage() {
                     <p className="font-semibold">
                       Contact: {caregiver.contact}
                     </p>
+<<<<<<< HEAD
+=======
+                    <div className="mt-4">
+                      <CaregiverRatingForm
+                        patientId={patientId}
+                        caregiverId={caregiver.id}
+                      />
+                    </div>
+>>>>>>> main
                   </div>
                 ) : (
                   <p>No caregiver assigned</p>
                 )}
+<<<<<<< HEAD
                 <CaregiverRatingForm />
+=======
+>>>>>>> main
               </div>
 
               <div className="flex justify-between">
@@ -120,7 +151,20 @@ function PatientPage() {
 
             <aside className="w-full lg:w-[320px] space-y-4">
               <div className="bg-white p-6 rounded-xl border">
+<<<<<<< HEAD
                 <FileUploadBox />
+=======
+                {patient.assessments && patient.assessments.length > 0 ? (
+                  <FileUploadBox
+                    patientId={patient.id}
+                    assessmentId={patient.assessments[0].id}
+                  />
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    No assessments available yet.
+                  </p>
+                )}
+>>>>>>> main
               </div>
               <div className="bg-[#E01F29]/10 border border-[#E01F29]/20 rounded-xl p-6">
                 <p className="text-sm mb-4">

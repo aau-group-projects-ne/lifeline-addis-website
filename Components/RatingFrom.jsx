@@ -73,7 +73,7 @@ function CaregiverRatingForm({ patientId, caregiverId }) {
                 type="button"
                 key={star}
                 onClick={() => handleRating(star)}
-                className={`text-3xl transition ${
+                className={`text-3xl transition cursor-pointer ${
                   star <= form.rating ? "text-yellow-400" : "text-slate-300"
                 }`}
               >
@@ -103,7 +103,7 @@ function CaregiverRatingForm({ patientId, caregiverId }) {
         {/* SUBMIT */}
         <button
           type="submit"
-          className="w-1/5 justify-self-end bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90"
+          className="w-1/5 justify-self-end bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 cursor-pointer active:scale-[0.98]"
         >
           Submit Rating
         </button>

@@ -1,3 +1,4 @@
+export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -30,7 +31,11 @@ export async function GET() {
         assessment: { include: { patient: true, doctor: true } },
         nurse: true,
       },
+<<<<<<< HEAD
       orderBy: { createdAt: "desc" },
+=======
+      orderBy: { updatedAt: "desc" },
+>>>>>>> main
     });
 
     return NextResponse.json(updates);

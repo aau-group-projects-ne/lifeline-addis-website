@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+export const runtime = "nodejs";
+>>>>>>> main
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -27,7 +31,12 @@ export async function POST(req: Request) {
       );
     }
 
+<<<<<<< HEAD
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+=======
+    const secretRaw = process.env.JWT_SECRET ?? "dev-secret-change-in-prod";
+    const secret = new TextEncoder().encode(secretRaw);
+>>>>>>> main
     const jwtExpiration = rememberMe ? "30d" : "1d";
 
     const token = await new SignJWT({ id: user.id, role: user.role })

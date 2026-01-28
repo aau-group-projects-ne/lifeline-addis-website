@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -8,6 +9,14 @@ export async function GET() {
       process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
     ),
   );
+=======
+export const runtime = "nodejs";
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  // Clear the auth_token cookie and redirect to home
+  const response = NextResponse.redirect(new URL("/", request.url));
+>>>>>>> main
   response.cookies.set("auth_token", "", {
     httpOnly: true,
     secure: true,

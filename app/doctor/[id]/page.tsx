@@ -2,11 +2,33 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+<<<<<<< HEAD
 function DoctorDashboard({ params }) {
   const [doctor, setDoctor] = useState(null);
   const [patients, setPatients] = useState([]);
   const [assessments, setAssessments] = useState([]);
   const [form, setForm] = useState({
+=======
+type Doctor = { id: number; name: string; specialty?: string };
+type Patient = { id: number; name: string; age?: number };
+type Assessment = {
+  id: number;
+  patientId: number;
+  document: string;
+  estimatedPrice: number;
+  createdAt: string | Date;
+};
+
+function DoctorDashboard({ params }: { params: { id: string } }) {
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [form, setForm] = useState<{
+    patientId: string;
+    document: string;
+    estimatedPrice: string;
+  }>({
+>>>>>>> main
     patientId: "",
     document: "",
     estimatedPrice: "",
@@ -17,21 +39,62 @@ function DoctorDashboard({ params }) {
     const loadDoctor = async () => {
       const res = await fetch(`/api/doctor/${params.id}`);
       const data = await res.json();
+<<<<<<< HEAD
       setDoctor(data);
       setPatients(data.patients || []);
       setAssessments(data.assessments || []);
+=======
+      setDoctor({
+        id: data.id,
+        name: data.name,
+        specialty: (data as any).specialty,
+      });
+      const assessmentsRaw = data.doctorAssessments || [];
+      const patientsMap = new Map<number, Patient>();
+      const assessmentsList: Assessment[] = assessmentsRaw.map((a: any) => {
+        const p = a.patient;
+        const name = p?.user?.name || `Patient #${p?.id}`;
+        if (p && !patientsMap.has(p.id)) {
+          patientsMap.set(p.id, { id: p.id, name, age: p.age ?? undefined });
+        }
+        return {
+          id: a.id,
+          patientId: a.patientId,
+          document: a.document,
+          estimatedPrice: a.estimatedPrice,
+          createdAt: a.createdAt,
+        };
+      });
+      setPatients(Array.from(patientsMap.values()));
+      setAssessments(assessmentsList);
+>>>>>>> main
     };
     loadDoctor();
   }, [params.id]);
 
+<<<<<<< HEAD
   const handleChange = (e) => {
+=======
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+>>>>>>> main
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.patientId || !form.document || !form.estimatedPrice) return;
+=======
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!form.patientId || !form.document || !form.estimatedPrice) return;
+    if (!doctor) return;
+>>>>>>> main
 
     const payload = {
       patientId: form.patientId,
@@ -52,7 +115,11 @@ function DoctorDashboard({ params }) {
     setForm({ patientId: "", document: "", estimatedPrice: "" });
   };
 
+<<<<<<< HEAD
   const getPatientName = (id) =>
+=======
+  const getPatientName = (id: number) =>
+>>>>>>> main
     patients.find((p) => p.id === id)?.name || "Unknown";
 
   if (!doctor) return <p>Loading...</p>;
@@ -139,7 +206,11 @@ function DoctorDashboard({ params }) {
 
             <button
               type="submit"
+<<<<<<< HEAD
               className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold"
+=======
+              className="bg-[#e63946] text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:opacity-90 active:scale-[0.98]"
+>>>>>>> main
             >
               Save Assessment
             </button>

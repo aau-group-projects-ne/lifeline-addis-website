@@ -72,7 +72,7 @@ function FileUploadBox({ patientId, assessmentId }) {
       {file && (
         <button
           onClick={handleUpload}
-          className="mt-4 bg-primary text-white px-4 py-2 rounded-xl"
+          className="mt-4 bg-primary text-white px-4 py-2 rounded-xl cursor-pointer hover:opacity-90 active:scale-[0.98]"
         >
           Upload
         </button>
