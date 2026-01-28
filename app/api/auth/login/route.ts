@@ -5,7 +5,7 @@ import { SignJWT } from "jose";
 
 export async function POST(req: Request) {
   try {
-    const { email, password, rememberMe } = await req.json(); // ✅ include rememberMe
+    const { email, password, rememberMe } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
@@ -15,36 +15,40 @@ export async function POST(req: Request) {
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user)
+    if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid)
+    if (!valid) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 },
       );
+    }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-
-    // ✅ Optional: Extend JWT expiration if rememberMe is true
     const jwtExpiration = rememberMe ? "30d" : "1d";
 
     const token = await new SignJWT({ id: user.id, role: user.role })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime(jwtExpiration) // ✅ dynamic expiration
+      .setExpirationTime(jwtExpiration)
       .sign(secret);
 
-    // ✅ Cookie maxAge based on rememberMe
-    const cookieMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24; // 30 days vs 1 day
+    const cookieMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24;
 
-    const response = NextResponse.json({ success: true });
+    const response = NextResponse.json({
+      success: true,
+      userId: user.id,
+      role: user.role, // 👈 return role
+    });
+
     response.cookies.set("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: cookieMaxAge, // ✅ dynamic cookie duration
+      maxAge: cookieMaxAge,
       path: "/",
     });
 

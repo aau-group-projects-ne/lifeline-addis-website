@@ -20,7 +20,10 @@ export async function proxy(req: NextRequest) {
     if (pathname.startsWith("/admin") && role !== "admin") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
-    if (pathname.startsWith("/caregiver") && role !== "nurse") {
+    if (pathname.startsWith("/doctor") && role !== "doctor") {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+    if (pathname.startsWith("/nurse") && role !== "nurse") {
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
     if (pathname.startsWith("/patient") && role !== "patient") {
@@ -35,5 +38,10 @@ export async function proxy(req: NextRequest) {
 
 // Configure which routes the proxy applies to
 export const config = {
-  matcher: ["/admin/:path*", "/caregiver/:path*", "/patient/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/doctor/:path*",
+    "/nurse/:path*",
+    "/patient/:path*",
+  ],
 };

@@ -6,6 +6,8 @@ function HomeNav() {
         <div className="flex items-center gap-4 text-primary">
           <div className="size-12">
             <Image
+              width={100}
+              height={100}
               className="w-full h-full"
               src="/tg_image_3199460643.jpeg"
               alt="Logo"

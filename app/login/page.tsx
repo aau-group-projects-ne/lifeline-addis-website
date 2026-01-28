@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
@@ -40,8 +42,17 @@ function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      alert("Login successful!");
+      // ✅ Cookie is already set by backend
+      // Redirect based on role
+      if (data.role === "patient") {
+        router.push(`/patient/${data.userId}`);
+      } else if (data.role === "doctor") {
+        router.push(`/doctor/${data.userId}`);
+      } else if (data.role === "nurse") {
+        router.push(`/nurse/${data.userId}`);
+      } else {
+        router.push("/unauthorized");
+      }
     } catch (err) {
       setError("Server error. Please try again later.");
     } finally {
