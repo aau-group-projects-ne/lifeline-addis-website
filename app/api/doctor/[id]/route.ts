@@ -9,15 +9,23 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
-  console.log("API route hit. Looking up doctor with userId:", id);
+  console.log("[doctor] GET hit. Looking up doctor by userId:", id);
 
   if (!id) {
     return NextResponse.json({ error: "Missing id param" }, { status: 400 });
   }
 
   try {
+    const userId = Number(id);
+    if (!Number.isFinite(userId)) {
+      return NextResponse.json(
+        { error: "Invalid id param. Must be a number" },
+        { status: 400 },
+      );
+    }
+
     const doctor = await prisma.user.findFirst({
-      where: { id: Number(id), role: "doctor" },
+      where: { id: userId, role: "doctor" },
       include: {
         doctorAssessments: {
           include: {
@@ -30,14 +38,14 @@ export async function GET(
     });
 
     if (!doctor) {
-      console.log("No doctor found for userId:", id);
+      console.log("[doctor] No doctor found for userId:", id);
       return NextResponse.json({ error: "Doctor not found" }, { status: 404 });
     }
 
-    console.log("Doctor found:", doctor);
+    console.log("[doctor] Doctor found:", { id: doctor.id, name: doctor.name });
     return NextResponse.json(doctor);
   } catch (error) {
-    console.error("Error fetching doctor:", error);
+    console.error("[doctor] Error fetching doctor:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

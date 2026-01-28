@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 /* ---------------- TYPES ---------------- */
 interface SignupForm {
@@ -23,6 +24,7 @@ interface TouchedFields {
 }
 
 function Signup() {
+  const router = useRouter();
   const [form, setForm] = useState<SignupForm>({
     userType: "patient",
     fullName: "",
@@ -130,7 +132,9 @@ function Signup() {
         alert(data.error || "Registration failed");
         return;
       }
-      alert("Registration successful!");
+      // Redirect to login so user can sign in
+      alert("Registration successful! Please sign in to continue.");
+      router.push("/login");
       setForm({
         userType: "patient",
         fullName: "",
